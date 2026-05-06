@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f6f9;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* Container */
+        .container {
+            padding: 20px;
+        }
+
+        /* Cards */
+        .cards {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 22%;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+
+        /* Search */
+        .search {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .search input {
+            padding: 10px;
+            width: 300px;
+        }
+
+        .search button {
+            padding: 10px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .issue {
+            background: green;
+        }
+
+        .return {
+            background: orange;
+        }
+
+        .logout {
+            background: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔹 Navbar -->
+<div class="navbar">
+    <h2>
+        📚 User Dashboard | Welcome 
+        <span th:text="${pro}">User</span>
+    </h2> 
+    <div>
+        <a th:href="@{/logout}" class="logout">Logout</a>
+    </div>
+</div>
+<div style="
+    background-color:#fff3cd;
+    color:#856404;
+    border:1px solid #ffeeba;
+    padding:15px;
+    border-radius:8px;
+    margin:15px 0;
+    font-family:Arial, sans-serif;
+    font-size:16px;
+">
+    ⚠️ <b>Important Note:</b><br><br>
+
+    Please make sure to refresh/reload the page after completing each task 
+    or operation (Return Book, Issue Request etc.) 
+    to view the latest updated data and changes properly.
+</div>
+
+<div class="container">
+
+
+    <!-- 🔹 Stats -->
+    <div class="cards">
+        <div class="card">
+            <h3 th:text="${totalBooks}">0</h3>
+            <p>Total Books</p>
+        </div>
+
+        <div class="card">
+            <h3 th:text="${issuedBookss}">0</h3>
+            <p>My Issued Books</p>
+        </div>
+
+        <div class="card">
+            <h3 th:text="${dueBooks}">0</h3>
+            <p>Due Books</p>
+        </div>
+
+        <div class="card">
+            <h3 th:text="${fine}">0</h3>
+            <p>Total Fine</p>
+        </div>
+    </div>
+	
+	<!-- 🔹 Search -->
+	<div class="search">
+	    <input type="text"
+	           id="bookSearch"
+	           placeholder="Search books..."
+	           onkeyup="searchTable('bookSearch','bookTable')">
+	</div>
+
+	<!-- 🔹 Available Books -->
+	<h2>📖 Available Books</h2>
+
+	<table id="bookTable">
+	    <tr>
+	        <th>ID</th>
+	        <th>Name</th>
+	        <th>Author</th>
+	        <th>Action</th>
+	    </tr>
+
+	    <tr th:each="book : ${books}">
+	        <td th:text="${book.id}"></td>
+	        <td th:text="${book.name}"></td>
+	        <td th:text="${book.author}"></td>
+
+	        <td>
+	            <form th:action="@{'/issue/' + ${book.id}}" method="post">
+	                <button class="btn issue">Issue</button>
+	            </form>
+	        </td>
+	    </tr>
+	</table>
+
+	<script>
+	function searchTable(inputId, tableId) {
+
+	    let input = document.getElementById(inputId).value.toLowerCase();
+
+	    let table = document.getElementById(tableId);
+
+	    let rows = table.getElementsByTagName("tr");
+
+	    for (let i = 1; i < rows.length; i++) {
+
+	        let text = rows[i].innerText.toLowerCase();
+
+	        if (text.includes(input)) {
+	            rows[i].style.display = "";
+	        } 
+	        else {
+	            rows[i].style.display = "none";
+	        }
+	    }
+	}
+	</script>
+
+
+
+    <br><br>
+
+    <!-- 🔹 Issued Books -->
+    <h2>📚 My Issued Books</h2>
+
+    <table>
+        <tr>
+            <th>Book</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+
+        <tr th:each="ib : ${issuedList}">
+            <td th:text="${ib.bookname}"></td>
+            <td th:text="${ib.issueDate}"></td>
+            <td th:text="${ib.dueDate}"></td>
+			<td th:text="${ib.status}"></td>
+ 
+        </tr>
+    </table>
+
+</div>
+
+
+
+</body>
+</html>

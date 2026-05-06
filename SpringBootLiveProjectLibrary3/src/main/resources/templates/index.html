@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2c3e50;
+            padding: 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(to right, #36d1dc, #5b86e5);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+        }
+
+        .hero button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background: #2c3e50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Features */
+        .features {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .feature-box {
+            background: white;
+            padding: 20px;
+            width: 20%;
+            box-shadow: 0px 0px 10px #ccc;
+            border-radius: 10px;
+        }
+
+        /* Search */
+        .search {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .search input {
+            padding: 10px;
+            width: 300px;
+        }
+
+        .search button {
+            padding: 10px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 40px;
+            background: #ecf0f1;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-box {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔹 Navbar -->
+<div class="navbar">
+    <h2>📚 Library System</h2>
+    <div>
+        <a th:href="@{/login}">Home</a>
+        <a th:href="@{/login}">Books</a>
+        <a th:href="@{/login}">Login</a>
+        <a th:href="@{/register}">Register</a>
+    </div>
+</div>
+
+<!-- 🔹 Hero Section -->
+<div class="hero">
+    <h1>Manage Your Library Smartly 📚</h1>
+    <p>Search, Issue and Return Books Easily</p>
+
+    <button onclick="location.href='/login'">Browse Books</button>
+    <button onclick="location.href='/login'">Login</button>
+</div>
+
+<!-- 🔹 Features -->
+<div class="features">
+    <div class="feature-box">
+        <h3>📖 Book Management</h3>
+        <p>Add, update and manage books easily</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>👤 Student Management</h3>
+        <p>Manage student records efficiently</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>🔄 Issue & Return</h3>
+        <p>Track issued and returned books</p>
+    </div>
+
+    <div class="feature-box">
+        <h3>💰 Fine System</h3>
+        <p>Automatic fine calculation</p>
+    </div>
+</div>
+
+<!-- 🔹 Search -->
+<div class="search">
+    <h2>Search Book</h2>
+
+    <form th:action="@{/login}" method="get">
+        <input type="text" name="keyword" placeholder="Enter book name...">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<!-- 🔹 Stats -->
+<div class="stats">
+    <div class="stat-box">
+        <h2 th:text="${totalBooks}">0</h2>
+        <p>Total Books</p>
+    </div>
+
+    <div class="stat-box">
+        <h2 th:text="${availableBooks}">0</h2>
+        <p>Available</p>
+    </div>
+
+    <div class="stat-box">
+        <h2 th:text="${issuedBooks}">0</h2>
+        <p>Issued</p>
+    </div>
+
+    <div class="stat-box">
+        <h2 th:text="${totalUsers}">0</h2>
+        <p>Users</p>
+    </div>
+</div>
+
+<!-- 🔹 Footer -->
+<div class="footer">
+    <p>© 2026 Library Management System | Built with ❤️ using Spring Boot</p>
+</div>
+
+</body>
+</html>

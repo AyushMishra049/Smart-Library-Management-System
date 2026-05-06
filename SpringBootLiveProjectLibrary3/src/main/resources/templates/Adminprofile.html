@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial;
+        display: flex;
+    }
+
+    .sidebar {
+        width: 220px;
+        background: #2c3e50;
+        color: white;
+        height: 100vh;
+        padding: 20px;
+    }
+
+    .sidebar a {
+        display: block;
+        color: white;
+        padding: 10px;
+        text-decoration: none;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+
+    .sidebar a:hover {
+        background: #34495e;
+    }
+
+    .content {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .section {
+        display: none;
+    }
+
+    .active {
+        display: block;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+	.logout {
+	    background: red;
+	}
+
+    input {
+        padding: 8px;
+        margin-bottom: 10px;
+        width: 300px;
+    }
+</style>
+
+
+
+
+
+<script>
+    function showSection(id) {
+        let sections = document.querySelectorAll(".section");
+        sections.forEach(sec => sec.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+    }
+
+    function searchTable(inputId, tableId) {
+        let input = document.getElementById(inputId);
+        let filter = input.value.toLowerCase();
+        let table = document.getElementById(tableId);
+        let tr = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < tr.length; i++) {
+            let text = tr[i].innerText.toLowerCase();
+            tr[i].style.display = text.includes(filter) ? "" : "none";
+        }
+    }
+</script>
+
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+    <h2>Admin</h2>
+
+
+<a onclick="showSection('dashboard')">Dashboard</a>
+<a onclick="showSection('books')">Books</a>
+<a onclick="showSection('students')">Students</a>
+<a onclick="showSection('requests')">Requests</a>
+<a onclick="showSection('issued')">Issued</a>
+
+
+</div>
+
+<!-- Content -->
+
+<div class="content">
+
+	<div style="
+	    background-color:#fff3cd;
+	    color:#856404;
+	    border:1px solid #ffeeba;
+	    padding:15px;
+	    border-radius:8px;
+	    margin:15px 0;
+	    font-family:Arial, sans-serif;
+	    font-size:16px;
+	">
+	    ⚠️ <b>Important Note:</b><br><br>
+
+	    Please make sure to refresh/reload the page after completing each task 
+	    or operation (Issue Book, Return Book, Approve Request, Delete, Add, etc.) 
+	    to view the latest updated data and changes properly.
+	</div>		
+
+<!-- Dashboard -->
+<div id="dashboard" class="section active">
+    <h2>Welcome <span th:text="${adminName}"></span></h2>
+	
+	<div>
+	    <a th:href="@{/logout}" class="logout">Logout</a>
+	</div>
+
+    <p>Total Books: <span th:text="${totalBooks}"></span></p>
+    <p>Total Students: <span th:text="${totalStudents}"></span></p>
+    <p>New Requests: <span th:text="${issuedCount}"></span></p>
+</div>
+
+<!-- Books -->
+<div id="books" class="section">
+    <h2>Manage Books</h2>
+
+    <input type="text" id="bookSearch" placeholder="Search Book..." onkeyup="searchTable('bookSearch','bookTable')">
+
+    <form action="/admin/addBook" method="post">
+        <input type="text" name="name" placeholder="Book Name" required>
+        <input type="text" name="author" placeholder="Author" required>
+        <input type="number" name="quantity" placeholder="Quantity" required>
+        <button type="submit">Add Book</button>
+    </form>
+
+    <table id="bookTable">
+        <tr>
+            <th>ID</th><th>Name</th><th>Author</th><th>Action</th>
+        </tr>
+
+        <tr th:each="b : ${books}">
+            <td th:text="${b.id}"></td>
+            <td th:text="${b.name}"></td>
+            <td th:text="${b.author}"></td>
+            <td>
+                <a th:href="@{'/admin/deleteBook/' + ${b.id}}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Students -->
+<div id="students" class="section">
+    <h2>Manage Students</h2>
+
+    <input type="text" id="studentSearch" placeholder="Search Student..." onkeyup="searchTable('studentSearch','studentTable')">
+
+    <table id="studentTable">
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Action</th>
+        </tr>
+
+        <tr th:each="s : ${students}">
+            <td th:text="${s.id}"></td>
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.email}"></td>
+            <td>
+                <a th:href="@{'/admin/deleteStudent/' + ${s.id}}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Requests -->
+<div id="requests" class="section">
+    <h2>Issue Requests</h2>
+
+    <input type="text" id="requestSearch" placeholder="Search Request..." onkeyup="searchTable('requestSearch','requestTable')">
+
+    <table id="requestTable">
+        <tr>
+            <th>Student</th><th>Book</th><th>Status</th><th>Action</th>
+        </tr>
+
+        <tr th:each="r : ${requests}">
+            <td th:text="${r.studentName}"></td>
+            <td th:text="${r.bookname}"></td>
+            <td th:text="${r.status}"></td>
+            <td>
+                <a th:href="@{'/admin/approve/' + ${r.id}}">Approve</a>
+                <a th:href="@{'/admin/reject/' + ${r.id}}">Reject</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Issued -->
+<div id="issued" class="section">
+    <h2>Issued Books</h2>
+
+    <input type="text" id="issuedSearch" placeholder="Search Issued..." onkeyup="searchTable('issuedSearch','issuedTable')">
+
+    <table id="issuedTable">
+        <tr>
+            <th>Student</th><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Status</th><th>Action</th>
+        </tr>
+
+        <tr th:each="i : ${issuedBooks}">
+            <td th:text="${i.studentName}"></td>
+            <td th:text="${i.bookname}"></td>
+            <td th:text="${i.issueDate}"></td>
+            <td th:text="${i.dueDate}"></td>
+			<td th:text="${i.status}"></td>
+            <td>
+                <a th:href="@{'/admin/return/' + ${i.id}}">Return</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+</div>
+
+</body>
+</html>
